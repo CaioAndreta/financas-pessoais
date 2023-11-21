@@ -19,7 +19,6 @@ class DespesasApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
-  
   MyHomePage({super.key});
 
   @override
@@ -28,14 +27,16 @@ class MyHomePage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Despesas Pessoais'),
         ),
-        body: const Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Card(
-              child: Text('Gráfico'),
-            ),
-            TransactionUser(),
-          ],
+        body: const SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Card(
+                child: Text('Gráfico'),
+              ),
+              TransactionUser(),
+            ],
+          ),
         ));
   }
 }
