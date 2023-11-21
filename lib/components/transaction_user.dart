@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:financas_pessoais/components/transaction_form.dart';
 import 'package:financas_pessoais/components/transaction_list.dart';
 import 'package:financas_pessoais/models/transaction.dart';
@@ -16,12 +18,26 @@ class _TransactionUserState extends State<TransactionUser> {
     Transaction(id: 't2', title: 'Bolo de Pote', value: 14.90, date: DateTime.now()),
     Transaction(id: 't3', title: 'Calça', value: 249.99, date: DateTime.now())
   ];
+
+  _addTransaction(String title, double value) {
+    final newTransaction = Transaction(
+      id: Random().nextDouble().toString(),
+      title: title,
+      value: value,
+      date: DateTime.now(),
+    );
+
+    setState(() {
+      _transactions.add(newTransaction);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         TransactionList(_transactions),
-        TransactionForm()
+        TransactionForm(_addTransaction),
       ],
     );
   }
