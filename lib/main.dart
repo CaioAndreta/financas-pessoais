@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:financas_pessoais/components/chart.dart';
 import 'package:financas_pessoais/components/transaction_form.dart';
 import 'package:financas_pessoais/components/transaction_list.dart';
 import 'package:financas_pessoais/models/transaction.dart';
@@ -21,6 +22,7 @@ class DespesasApp extends StatelessWidget {
           onPrimary: Colors.indigo.shade900,
           secondary: Colors.amber,
           onSecondary: Colors.indigo.shade900,
+          surface: const Color.fromRGBO(254, 254, 254, 1),
         ),
         textTheme: tema.textTheme.copyWith(
           titleLarge: const TextStyle(
@@ -63,10 +65,19 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transactions = [
-    // Transaction(id: 't1', title: 'Novo Tênis de Corrida', value: 599.90, date: DateTime.now()),
-    // Transaction(id: 't2', title: 'Bolo de Pote', value: 14.90, date: DateTime.now()),
-    // Transaction(id: 't3', title: 'Calça', value: 249.99, date: DateTime.now()),
+    Transaction(id: 't0', title: 'Conta antiga', value: 10000, date: DateTime.now().subtract(Duration(days: 33))),
+    Transaction(
+        id: 't1', title: 'Novo Tênis de Corrida', value: 599.90, date: DateTime.now().subtract(Duration(days: 0))),
+    Transaction(id: 't2', title: 'Bolo de Pote', value: 14.90, date: DateTime.now().subtract(Duration(days: 1))),
+    Transaction(id: 't3', title: 'Calça', value: 249.99, date: DateTime.now().subtract(Duration(days: 4))),
+    Transaction(id: 't4', title: 'Calça', value: 100, date: DateTime.now().subtract(Duration(days: 0))),
   ];
+
+  List<Transaction> get _recentTransactions {
+    return _transactions
+        .where((element) => element.date.isAfter(DateTime.now().subtract(const Duration(days: 7))))
+        .toList();
+  }
 
   _addTransaction(String title, double value) {
     final newTransaction = Transaction(
@@ -110,9 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Card(
-              child: Text('Gráfico'),
-            ),
+            Chart(_recentTransactions),
             TransactionList(_transactions),
           ],
         ),
