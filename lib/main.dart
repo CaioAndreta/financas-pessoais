@@ -58,8 +58,8 @@ class DespesasApp extends StatelessWidget {
               color: Colors.black,
             ),
           ),
-          listTileTheme: ListTileThemeData(
-            tileColor: const Color.fromRGBO(240, 240, 240, 1),
+          listTileTheme: const ListTileThemeData(
+            tileColor: Color.fromRGBO(240, 240, 240, 1),
           )),
     );
   }
@@ -103,6 +103,12 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.of(context).pop();
   }
 
+  _deleteTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((element) => element.id == id);
+    });
+  }
+
   _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
         context: context,
@@ -131,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Chart(_recentTransactions),
-            TransactionList(_transactions),
+            TransactionList(_transactions, _deleteTransaction),
           ],
         ),
       ),
