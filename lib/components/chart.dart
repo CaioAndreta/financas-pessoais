@@ -23,7 +23,7 @@ class Chart extends StatelessWidget {
         }
       }
       return {'day': DateFormat.E().format(weekDay)[0], 'value': totalSum};
-    });
+    }).reversed.toList();
   }
 
   double get _weekTotalValue {
@@ -43,7 +43,12 @@ class Chart extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             ...groupedTransactions.map((e) {
-              return Flexible(fit: FlexFit.tight, child: ChartBar(label: e['day'].toString(), value: double.parse(e['value'].toString()), percentage: double.parse(e['value'].toString()) / _weekTotalValue));
+              return Flexible(
+                  fit: FlexFit.tight,
+                  child: ChartBar(
+                      label: e['day'].toString(),
+                      value: double.parse(e['value'].toString()),
+                      percentage: _weekTotalValue == 0 ? 0 : double.parse(e['value'].toString()) / _weekTotalValue));
             })
           ],
         ),
