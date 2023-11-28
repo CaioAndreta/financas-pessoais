@@ -8,27 +8,32 @@ class ChartBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 20,
-          child: FittedBox(child: Text(value.toStringAsFixed(2))),
-        ),
-        const SizedBox(height: 5),
-        RotatedBox(
-          quarterTurns: -1,
-          child: SizedBox(
-            height: 10,
-            width: 60,
-            child: LinearProgressIndicator(
-              value: percentage,
-              backgroundColor: const Color.fromRGBO(210, 210, 210, 1),
-              borderRadius: BorderRadius.circular(5),
+    return LayoutBuilder(
+      builder: (ctx, constraints) {
+        return Column(
+          children: [
+            SizedBox(
+              height: constraints.maxHeight * 0.1,
+              child: FittedBox(child: Text(value.toStringAsFixed(2))),
             ),
-          ),
-        ),
-        Text(label),
-      ],
+            SizedBox(height: constraints.maxHeight * 0.05),
+            RotatedBox(
+              quarterTurns: -1,
+              child: SizedBox(
+                height: 10,
+                width: constraints.maxHeight * 0.7,
+                child: LinearProgressIndicator(
+                  value: percentage,
+                  backgroundColor: const Color.fromRGBO(210, 210, 210, 1),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+              ),
+            ),
+            SizedBox(height: constraints.maxHeight * 0.05),
+            SizedBox(height: constraints.maxHeight * 0.1, child: FittedBox(child: Text(label))),
+          ],
+        );
+      },
     );
   }
 }

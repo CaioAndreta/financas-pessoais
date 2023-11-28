@@ -32,21 +32,21 @@ class DespesasApp extends StatelessWidget {
             foregroundColor: MaterialStatePropertyAll(Colors.white),
           )),
           textTheme: tema.textTheme.copyWith(
-            titleLarge: const TextStyle(
+            titleLarge: TextStyle(
               fontFamily: 'OpenSans',
-              fontSize: 20,
+              fontSize: MediaQuery.of(context).textScaler.scale(20),
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),
-            titleMedium: const TextStyle(
+            titleMedium: TextStyle(
               fontFamily: 'OpenSans',
-              fontSize: 16,
+              fontSize: MediaQuery.of(context).textScaler.scale(16),
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),
             titleSmall: TextStyle(
               fontFamily: 'OpenSans',
-              fontSize: 12,
+              fontSize: MediaQuery.of(context).textScaler.scale(12),
               fontWeight: FontWeight.bold,
               color: Colors.grey.shade500,
             ),
@@ -119,25 +119,28 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      title: const Text('Despesas Pessoais'),
+      actions: [
+        IconButton(
+          onPressed: () => _openTransactionFormModal(context),
+          icon: Icon(
+            Icons.add,
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
+        )
+      ],
+    );
+    final availableHeight =
+        MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Despesas Pessoais'),
-        actions: [
-          IconButton(
-            onPressed: () => _openTransactionFormModal(context),
-            icon: Icon(
-              Icons.add,
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
-          )
-        ],
-      ),
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Chart(_recentTransactions),
-            TransactionList(_transactions, _deleteTransaction),
+            SizedBox(height: availableHeight * 0.3, child: Chart(_recentTransactions)),
+            SizedBox(height: availableHeight * 0.7, child: TransactionList(_transactions, _deleteTransaction)),
           ],
         ),
       ),
