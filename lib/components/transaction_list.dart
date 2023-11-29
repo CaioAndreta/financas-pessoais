@@ -41,22 +41,19 @@ class TransactionList extends StatelessWidget {
                 elevation: 5,
                 margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
                 child: ListTile(
-                    leading: CircleAvatar(
-                      radius: 30,
-                      child: Padding(
-                        padding: const EdgeInsets.all(6),
-                        child: FittedBox(child: Text('R\$${e.value}')),
-                      ),
+                  leading: CircleAvatar(
+                    radius: 30,
+                    child: Padding(
+                      padding: const EdgeInsets.all(6),
+                      child: FittedBox(child: Text('R\$${e.value}')),
                     ),
-                    title: Text(
-                      e.title,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    subtitle: Text(DateFormat('d MMM y').format(e.date)),
-                    trailing: IconButton(
-                      onPressed: () => onDelete(e.id),
-                      icon: const Icon(Icons.delete),
-                    )),
+                  ),
+                  title: Text(
+                    e.title,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  subtitle: Text(DateFormat('d MMM y').format(e.date)),
+                ),
               );
             },
           );
