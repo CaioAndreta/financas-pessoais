@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:financas_pessoais/components/chart.dart';
 import 'package:financas_pessoais/components/transaction_form.dart';
 import 'package:financas_pessoais/components/transaction_list.dart';
 import 'package:financas_pessoais/models/transaction.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 main() => runApp(const DespesasApp());
@@ -19,7 +21,7 @@ class DespesasApp extends StatelessWidget {
       theme: tema.copyWith(
           colorScheme: tema.colorScheme.copyWith(
             primary: Colors.pinkAccent,
-            onPrimary: Colors.indigo.shade900,
+            onPrimary: Colors.white,
             secondary: Colors.amber,
             onSecondary: Colors.indigo.shade900,
             surface: const Color.fromRGBO(254, 254, 254, 1),
@@ -123,34 +125,35 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  Widget _getIconButton(IconData icon, Function fn) {
+    return Platform.isIOS
+        ? GestureDetector(
+            onTap: () => fn,
+            child: Icon(icon),
+          )
+        : IconButton(
+            onPressed: () => fn,
+            icon: Icon(
+              icon,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+          );
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
-    final appBar = AppBar(
-      title: const Text('Despesas Pessoais'),
-      actions: [
-        if (isLandscape)
-          IconButton(
-            onPressed: () => setState(() => _showChart = !_showChart),
-            icon: Icon(
-              _showChart ? Icons.list : Icons.bar_chart_rounded,
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
-          ),
-        IconButton(
-          onPressed: () => _openTransactionFormModal(context),
-          icon: Icon(
-            Icons.add,
-            color: Theme.of(context).colorScheme.onPrimary,
-          ),
-        )
-      ],
-    );
+    final actions = <Widget>[
+      if (isLandscape)
+        _getIconButton(
+            _showChart ? Icons.list : Icons.bar_chart_rounded, () => setState(() => _showChart = !_showChart)),
+      _getIconButton(Platform.isIOS ? CupertinoIcons.add : Icons.add, () => _openTransactionFormModal(context))
+    ];
+    final appBar = AppBar(title: const Text('Despesas Pessoais'), actions: actions);
     final availableHeight =
         MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top;
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
+    final bodyPage = SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -161,13 +164,24 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).colorScheme.secondary,
-        foregroundColor: Theme.of(context).colorScheme.onSecondary,
-        onPressed: () => _openTransactionFormModal(context),
-        child: const Icon(Icons.add),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            navigationBar: CupertinoNavigationBar(
+              middle: const Text('Despesas Pessoais'),
+              trailing: Row(mainAxisSize: MainAxisSize.min, children: actions),
+            ),
+            child: bodyPage)
+        : Scaffold(
+            appBar: appBar,
+            body: bodyPage,
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              foregroundColor: Theme.of(context).colorScheme.onSecondary,
+              onPressed: () => _openTransactionFormModal(context),
+              child: const Icon(Icons.add),
+            ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          );
   }
 }
